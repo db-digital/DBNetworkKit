@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "DBNetworkKit"
-  spec.version      = "0.0.2"
+  spec.version      = "0.0.3"
   spec.summary      = "A small framework to manage the Network requests."
 
   # This description is used to generate tags and improve search results.

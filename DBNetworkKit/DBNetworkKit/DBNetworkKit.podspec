@@ -91,7 +91,7 @@ Pod::Spec.new do |spec|
   #  Not including the public_header_files will make all headers public.
   #
 
-  spec.source_files  = "DBNetworkKit", "DBNetworkKit/**/*.{h,m}"
+  spec.source_files  = "DBNetworkKit", "DBNetworkKit/**/*.{h,m,swift}"
   spec.exclude_files = "DBNetworkKit/Exclude"
 
   # spec.public_header_files = "Classes/**/*.h"

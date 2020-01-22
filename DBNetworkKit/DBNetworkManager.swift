@@ -27,23 +27,16 @@ public class DBNetworkManager {
     public func startNetworkMonitor() {
         print("Network monitoring start....")
         NetworkReachability.shared.startMonitoring()
-//        NetworkReachability.shared.didStartMonitoringHandler = { [unowned self] in
-//            print("Network monitoring stop....")
-//           // NetworkReachability.shared.stopMonitoring()
-//        }
     }
     
     public func sendRequest(urlString: String,
                             method: kHTTPMethod,
                             parameters: [String: Any]?,
-                            completion: @escaping (_ result: Any?, _ error: Error?) -> ()) -> Void {
+                            completion: @escaping (_ data: Data?, _ error: Error?) -> ()) -> Void {
         
         if k_debug {
-            print("Connecting with URL \(urlString) with parameters: \(parameters)")
+            print("Connecting with URL \(urlString) with parameters: \(String(describing: parameters))")
         }
-        
-       // print("is enabled: \(NetworkReachability.shared.isConnected)")
-        
         
         guard let url = URL(string: urlString) else { return }
         var request : URLRequest = URLRequest(url: url)
@@ -59,11 +52,7 @@ public class DBNetworkManager {
             if k_debug {
                 print("Response for URL \(urlString) is: \(result)")
             }
-            completion(result.responseData, nil)
-//
-//            DispatchQueue.main.async {
-//
-//            }
+            completion(data, error)
         }
         dataTask.resume()
     }

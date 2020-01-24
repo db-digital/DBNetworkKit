@@ -26,7 +26,7 @@ public class DBNetworkManager {
     
     public func startNetworkMonitor() {
         print("Network monitoring start....")
-        NetworkReachability.shared.startMonitoring()
+//        NetworkReachability.shared.startMonitoring()
     }
     
     public func sendRequest(urlString: String,

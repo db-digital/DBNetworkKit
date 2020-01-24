@@ -7,17 +7,7 @@
 //
 
 import Foundation
-
-let k_debug = true
-
-public enum kHTTPMethod: String {
-    case kGET = "GET"
-    case kPOST = "POST"
-}
-
-public enum ErrorType: Error {
-    case noNetwork, requestSuccess, requestFailed, requestCancelled
-}
+import DBLoggingKit
 
 public class DBNetworkManager {
     
@@ -25,19 +15,16 @@ public class DBNetworkManager {
     public static let shared: DBNetworkManager = DBNetworkManager()
     
     public func startNetworkMonitor() {
-        print("Network monitoring start....")
+        DBLogger.shared.logMessage(message: "Network monitoring start....")
 //        NetworkReachability.shared.startMonitoring()
     }
     
     public func sendRequest(urlString: String,
-                            method: kHTTPMethod,
+                            method: DBNetworkManager.RequestMethod,
                             parameters: [String: Any]?,
                             completion: @escaping (_ data: Data?, _ error: Error?) -> ()) -> Void {
         
-        if k_debug {
-            print("Connecting with URL \(urlString) with parameters: \(String(describing: parameters))")
-        }
-        
+        DBLogger.shared.logMessage(message: "Connecting with URL \(urlString) with parameters: \(String(describing: parameters))")
         guard let url = URL(string: urlString) else { return }
         var request : URLRequest = URLRequest(url: url)
         request.httpMethod = method.rawValue
@@ -49,9 +36,7 @@ public class DBNetworkManager {
         let dataTask = URLSession.shared.dataTask(with: request) {
             data, response, error in
             let result = self.getResponseFromData(data: data)
-            if k_debug {
-                print("Response for URL \(urlString) is: \(result)")
-            }
+            DBLogger.shared.logMessage(message: "Response for URL \(urlString) is: \(result)")
             completion(data, error)
         }
         dataTask.resume()
@@ -173,5 +158,12 @@ public class DBNetworkManager {
     
     func timeStamp()-> TimeInterval {
         return Date().timeIntervalSince1970.rounded()
+    }
+}
+
+extension DBNetworkManager {
+    public enum RequestMethod : String {
+        case get = "GET"
+        case post = "POST"
     }
 }

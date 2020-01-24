@@ -1,0 +1,23 @@
+{
+  "name": "DBNetworkKit",
+  "version": "0.0.6",
+  "summary": "A small framework to manage the Network requests.",
+  "description": "A small framework to manage the Network requests in the apps.",
+  "homepage": "https://github.com/db-digital/DBNetworkKit",
+  "license": "MIT",
+  "authors": {
+    "Nitin": "nitin.kumar@dbdigital.in"
+  },
+  "platforms": {
+    "ios": "11.0"
+  },
+  "source": {
+    "git": "git@github.com:db-digital/DBNetworkKit.git",
+    "tag": "0.0.6"
+  },
+  "source_files": [
+    "DBNetworkKit",
+    "DBNetworkKit/**/*.{h,m,swift}"
+  ],
+  "exclude_files": "DBNetworkKit/Exclude"
+}

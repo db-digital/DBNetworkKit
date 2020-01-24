@@ -1,0 +1,6 @@
+framework module DBLoggingKit {
+  umbrella header "DBLoggingKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

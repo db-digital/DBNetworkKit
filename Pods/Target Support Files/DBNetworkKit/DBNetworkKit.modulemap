@@ -1,0 +1,6 @@
+framework module DBNetworkKit {
+  umbrella header "DBNetworkKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

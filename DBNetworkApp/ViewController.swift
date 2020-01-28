@@ -19,7 +19,7 @@ class ViewController: UIViewController {
     private func testNetworkRequest() {
         let urlString = "https://appfeedlight.bhaskar.com/appFeedV3/NewsByProviderId/521/1914/PG1/"
         DBNetworkManager.shared.sendRequest(urlString: urlString,
-                                            method: .kGET,
+                                            method: .get,
                                             parameters: nil)
         { (result, error) in
             print("error: ", error as Any)

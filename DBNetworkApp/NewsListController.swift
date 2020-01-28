@@ -8,6 +8,7 @@
 
 import UIKit
 import DBNetworkKit
+import DBLoggingKit
 
 class NewsListController: UITableViewController {
 
@@ -24,6 +25,14 @@ class NewsListController: UITableViewController {
     }
     
     private func initialSetup() {
+//        DBNetworkManager.shared.authenticateWithCompletion(completion: { (response, error) in
+//            DBLogger.shared.logMessage(message: "response from server for authentication is \(response) with error \(error)")
+//        })
+        
+        DBNetworkManager.shared.getCityListWithCompletion(completion: { (response, error) in
+            DBLogger.shared.logMessage(message: "response from server for cities list is \(response) with error \(error)")
+        })
+        
         view.backgroundColor = .white
         title = "News"
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "NewsCell")
@@ -31,7 +40,7 @@ class NewsListController: UITableViewController {
     
     private func samplePostRequest() {
         DBNetworkManager.shared.sendRequest(urlString: "https://reqres.in/api/users",
-                                            method: .kPOST,
+                                            method: .post,
                                             parameters: ["name": "nitinaggarwal@gmail.com", "job": "12345678"])
         { (result, error) in
             print(result as Any)
@@ -42,26 +51,26 @@ class NewsListController: UITableViewController {
     private func fetchNews() {
         self.isRequestLoading = true
         let urlString = "https://appfeedlight.bhaskar.com/appFeedV3/GuruvaniTopicVideo/960/19/PG\(self.pageIndex)/"
-        DBNetworkManager.shared.sendRequest(urlString: urlString,
-                                            method: .kGET,
-                                            parameters: nil)
-        { (result, error) in
-            self.isRequestLoading = false
-            if let response = result as? [String: Any], let feedArray = response["feed"] as? [[String: Any]], feedArray.isEmpty == false {
-                let titles = feedArray.map { (feedDictionary) -> String in
-                    return feedDictionary["title"] as? String ?? "Empty"
-                }
-                self.kTitles.append(contentsOf: titles)
-                
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-                self.pageIndex += 1
-                self.paginationAvailable = true
-                return
-            }
-            self.paginationAvailable = false
-        }
+//        DBNetworkManager.shared.sendRequest(urlString: urlString,
+//                                            method: .get,
+//                                            parameters: nil)
+//        { (result, error) in
+//            self.isRequestLoading = false
+//            if let response = result as? [String: Any], let feedArray = response["feed"] as? [[String: Any]], feedArray.isEmpty == false {
+//                let titles = feedArray.map { (feedDictionary) -> String in
+//                    return feedDictionary["title"] as? String ?? "Empty"
+//                }
+//                self.kTitles.append(contentsOf: titles)
+//                
+//                DispatchQueue.main.async {
+//                    self.tableView.reloadData()
+//                }
+//                self.pageIndex += 1
+//                self.paginationAvailable = true
+//                return
+//            }
+//            self.paginationAvailable = false
+//        }
     }
 
 

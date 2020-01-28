@@ -160,7 +160,7 @@ public class DBNetworkManager {
         request.httpMethod = method.rawValue
         
         if let params = parameters {
-            request.httpBody = printableParams(dictionary: params).data(using: .utf8)
+//            request.httpBody = printableParams(dictionary: params).data(using: .utf8)
         }
         
         let dataTask = URLSession.shared.dataTask(with: request) {

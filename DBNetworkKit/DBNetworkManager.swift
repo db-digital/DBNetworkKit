@@ -14,17 +14,29 @@ public class DBNetworkManager {
     // MARK: - Public Methods
     public static let shared: DBNetworkManager = DBNetworkManager()
     
-    public func getCityListWithCompletion(completion : (([AnyHashable : Any]?, Error?)->Void)?) {
+    public func getCityListWithCompletion(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
         if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/cities") {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            
             executeURLRequest(urlRequest: urlRequest, completion: completion)
         } else {
-            completion?(nil, nil)
+            completion?(nil, nil, nil)
         }
     }
     
-    public func executeURLRequest(urlRequest : URLRequest, completion : (([AnyHashable : Any]?, Error?)->())?) {
+    public func saveCityListWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/cities") {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
+            urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
+    public func executeURLRequest(urlRequest : URLRequest, completion : (([AnyHashable : Any]?, Data?, Error?)->())?) {
         if let authToken = DBNetworkKit.authToken, authToken.count > 0 {
             let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
                 if let self = self {
@@ -34,25 +46,25 @@ public class DBNetworkManager {
                                 // re-rerun the request
                                 let dataTaskRetry = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
                                     if let deserializedResponse = self.getResponseFromData(data: data).responseData  {
-                                        completion?(deserializedResponse, error)
+                                        completion?(deserializedResponse, data ,error)
                                     } else {
-                                        completion?(nil, error)
+                                        completion?(nil, nil, error)
                                     }
                                 }
                                 dataTaskRetry.resume()
                             } else {
-                                completion?(nil, refreshTokenError)
+                                completion?(nil, nil, refreshTokenError)
                             }
                         }
                     } else {
                         if let deserializedResponse = self.getResponseFromData(data: data).responseData  {
-                            completion?(deserializedResponse, error)
+                            completion?(deserializedResponse, data, error)
                         } else {
-                            completion?(nil, error)
+                            completion?(nil, nil, error)
                         }
                     }
                 } else {
-                    completion?(nil, error)
+                    completion?(nil, nil, error)
                 }
             }
             dataTask.resume()
@@ -60,12 +72,12 @@ public class DBNetworkManager {
             authenticateWithCompletion { [weak self] (response, authenticationError) in
                 if let self = self {
                     if authenticationError != nil {
-                        completion?(nil, authenticationError)
+                        completion?(nil, nil, authenticationError)
                     } else {
                         self.executeURLRequest(urlRequest: urlRequest, completion: completion)
                     }
                 } else {
-                    completion?(nil, NSError())
+                    completion?(nil, nil, NSError())
                 }
             }
         }

@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |spec|
   spec.name         = "DBNetworkKit"
-  spec.version      = "0.0.10"
+  spec.version      = "0.0.11"
   spec.summary      = "A small framework to manage the Network requests."
   spec.description  = "A small framework to manage the Network requests in the apps."
   spec.homepage     = "https://github.com/db-digital/DBNetworkKit"

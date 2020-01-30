@@ -10,16 +10,10 @@ import UIKit
 import DBLoggingKit
 
 struct DBNetworkKit {
-    static public let refreshTokenKey : String = "rt"
-    static public let authTokenKey : String = "at"
-    static public let envKey : String = "env"
-    static public let uidKey : String = "uid"
-    
-//    var authURL : URL {
-//        get {
-//
-//        }
-//    }
+    static public let refreshTokenKey : String = "db.new.rt"
+    static public let authTokenKey : String = "db.new.at"
+    static public let envKey : String = "db.new.env"
+    static public let uidKey : String = "db.new.uid"
     
     static var infoPlistValues : [String : Any]? {
         get {

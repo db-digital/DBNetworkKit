@@ -15,11 +15,12 @@ struct DBNetworkKit {
     static public let envKey : String = "env"
     static public let uidKey : String = "uid"
     
-//    var authURL : URL {
-//        get {
-//
-//        }
-//    }
+    static public let fcmToken = "fcmToken"
+    
+    static public let refreshTokenUserDefaultsKey : String = "db.new.rt"
+    static public let authTokenserDefaultsKey : String = "db.new.at"
+    static public let envserDefaultsKey : String = "db.new.env"
+    static public let uidserDefaultsKey : String = "db.new.uid"
     
     static var infoPlistValues : [String : Any]? {
         get {
@@ -41,52 +42,52 @@ struct DBNetworkKit {
     static var currentEnv : Env {
         get {
             if let userDefaults = groupUserDefaults {
-                return Env(rawValue:userDefaults.integer(forKey: envKey)) ?? .Prod
+                return Env(rawValue:userDefaults.integer(forKey: envserDefaultsKey)) ?? .Prod
             } else {
                 return .Prod
             }
         }
         set {
-            groupUserDefaults?.set(newValue.rawValue, forKey: envKey)
+            groupUserDefaults?.set(newValue.rawValue, forKey: envserDefaultsKey)
         }
     }
     
     static var refreshToken : String? {
         get {
-            return groupUserDefaults?.string(forKey: refreshTokenKey)
+            return groupUserDefaults?.string(forKey: refreshTokenUserDefaultsKey)
         }
         
         set {
             guard let token = newValue else {
                 return
             }
-            UserDefaults(suiteName: groupBundleIdentifier)?.setValue(token, forKey: refreshTokenKey)
+            UserDefaults(suiteName: groupBundleIdentifier)?.setValue(token, forKey: refreshTokenUserDefaultsKey)
         }
     }
     
     static var authToken : String? {
         get {
-            return groupUserDefaults?.string(forKey: authTokenKey)
+            return groupUserDefaults?.string(forKey: authTokenserDefaultsKey)
         }
         
         set {
             guard let token = newValue else {
                 return
             }
-            UserDefaults(suiteName: groupBundleIdentifier)?.setValue(token, forKey: authTokenKey)
+            UserDefaults(suiteName: groupBundleIdentifier)?.setValue(token, forKey: authTokenserDefaultsKey)
         }
     }
     
-    static var uid : String? {
+    static var uid : Int? {
         get {
-            return groupUserDefaults?.string(forKey: uidKey)
+            return groupUserDefaults?.integer(forKey: uidserDefaultsKey)
         }
         
         set {
             guard let token = newValue else {
                 return
             }
-            UserDefaults(suiteName: groupBundleIdentifier)?.setValue(token, forKey: uidKey)
+            UserDefaults(suiteName: groupBundleIdentifier)?.setValue(token, forKey: uidserDefaultsKey)
         }
     }
     

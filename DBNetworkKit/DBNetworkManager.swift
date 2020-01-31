@@ -36,6 +36,20 @@ public class DBNetworkManager {
         }
     }
     
+    public func updateFcmTokenWithCompletion(parameters: [String: Any], completion : ((String, [AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/update-fcm-token") {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
+            urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
+            executeURLRequest(urlRequest: urlRequest) { (response, data, error) in
+                let fcmToken = parameters[DBNetworkKit.fcmToken] as? String ?? ""
+                completion?(fcmToken, response, data, error)
+            }
+        } else {
+            completion?("", nil, nil, nil)
+        }
+    }
+    
     public func executeURLRequest(urlRequest : URLRequest, completion : (([AnyHashable : Any]?, Data?, Error?)->())?) {
         if let authToken = DBNetworkKit.authToken, authToken.count > 0 {
             let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
@@ -71,7 +85,8 @@ public class DBNetworkManager {
         } else {
             authenticateWithCompletion { [weak self] (response, authenticationError) in
                 if let self = self {
-                    if authenticationError != nil {
+                    
+                    if authenticationError != nil  {
                         completion?(nil, nil, authenticationError)
                     } else {
                         self.executeURLRequest(urlRequest: urlRequest, completion: completion)
@@ -89,7 +104,7 @@ public class DBNetworkManager {
             request.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
             let body = [ DBNetworkKit.authTokenKey : DBNetworkKit.authToken,
                          DBNetworkKit.refreshTokenKey : DBNetworkKit.refreshToken,
-                         DBNetworkKit.uidKey : DBNetworkKit.uid
+                         DBNetworkKit.uidKey : String(describing: DBNetworkKit.uid)
             ]
             let jsonData = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
             request.httpBody = jsonData
@@ -142,7 +157,7 @@ public class DBNetworkManager {
                         DBNetworkKit.refreshToken = rt
                     }
                     
-                    if let uid = result[DBNetworkKit.uidKey] as? String {
+                    if let uid = result[DBNetworkKit.uidKey] as? Int {
                         DBNetworkKit.uid = uid
                     }
                 }

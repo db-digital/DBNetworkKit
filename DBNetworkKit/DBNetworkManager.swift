@@ -50,6 +50,36 @@ public class DBNetworkManager {
         }
     }
     
+    public func getFeedWithCursorID(cursorID : String, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
+        if let url = URL(string: "https://api.myjson.com/bins/17cw0m") {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
+    public func getArticleWithIdentifier(identifier : Int, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
+        if let url = URL(string: "https://api.myjson.com/bins/j9v4q") {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
+    public func getFeed(completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
+        if let url = URL(string: "https://api.myjson.com/bins/17cw0m") {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
     public func executeURLRequest(urlRequest : URLRequest, completion : (([AnyHashable : Any]?, Data?, Error?)->())?) {
         if let authToken = DBNetworkKit.authToken, authToken.count > 0 {
             let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in

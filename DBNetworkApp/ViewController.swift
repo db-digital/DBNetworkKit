@@ -16,7 +16,11 @@ class ViewController: UIViewController {
       //  testNetworkRequest()
     }
 
+    
+    
     private func testNetworkRequest() {
+        
+    
         let urlString = "https://appfeedlight.bhaskar.com/appFeedV3/NewsByProviderId/521/1914/PG1/"
         DBNetworkManager.shared.sendRequest(urlString: urlString,
                                             method: .get,

@@ -4,28 +4,25 @@ PODS:
     - CocoaLumberjack/Core
   - DBLoggingKit (0.0.7):
     - CocoaLumberjack/Swift
-  - DBNetworkKit (0.0.10):
+  - DBNetworkKit (0.0.12):
     - DBLoggingKit
 
 DEPENDENCIES:
   - DBLoggingKit
-  - DBNetworkKit (from `./`)
+  - DBNetworkKit
 
 SPEC REPOS:
   "git@github.com:db-digital/DBPodSpecsRepo.git":
     - DBLoggingKit
+    - DBNetworkKit
   https://github.com/CocoaPods/Specs.git:
     - CocoaLumberjack
-
-EXTERNAL SOURCES:
-  DBNetworkKit:
-    :path: "./"
 
 SPEC CHECKSUMS:
   CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
   DBLoggingKit: 975a2b1a390718edb51a331077b41608a3015a6c
-  DBNetworkKit: c74c5c465c70b3303f4cf4a01b21cddc434b9ebf
+  DBNetworkKit: 8885342e1a9ba34d8fd557372c2fa9753c8901a0
 
-PODFILE CHECKSUM: e800f10c02c882d0bb30ed5ff2f9db4d5b5ba2ba
+PODFILE CHECKSUM: 6155da78a7c84bce282e41f213d80e3a66d0b05e
 
 COCOAPODS: 1.8.4

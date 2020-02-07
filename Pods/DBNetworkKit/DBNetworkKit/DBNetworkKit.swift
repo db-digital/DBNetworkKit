@@ -8,19 +8,12 @@
 
 import UIKit
 import DBLoggingKit
-public struct DBNetworkKit {
-   
-    static public let refreshTokenKey : String = "rt"
-    static public let authTokenKey : String = "at"
-    static public let envKey : String = "env"
-    static public let uidKey : String = "uid"
-    
-    static public let fcmToken = "fcmToken"
-    
-    static public let refreshTokenUserDefaultsKey : String = "db.new.rt"
-    static public let authTokenserDefaultsKey : String = "db.new.at"
-    static public let envserDefaultsKey : String = "db.new.env"
-    static public let uidserDefaultsKey : String = "db.new.uid"
+
+struct DBNetworkKit {
+    static public let refreshTokenKey : String = "db.new.rt"
+    static public let authTokenKey : String = "db.new.at"
+    static public let envKey : String = "db.new.env"
+    static public let uidKey : String = "db.new.uid"
     
     static var infoPlistValues : [String : Any]? {
         get {
@@ -42,52 +35,52 @@ public struct DBNetworkKit {
     static var currentEnv : Env {
         get {
             if let userDefaults = groupUserDefaults {
-                return Env(rawValue:userDefaults.integer(forKey: envserDefaultsKey)) ?? .Prod
+                return Env(rawValue:userDefaults.integer(forKey: envKey)) ?? .Prod
             } else {
                 return .Prod
             }
         }
         set {
-            groupUserDefaults?.set(newValue.rawValue, forKey: envserDefaultsKey)
+            groupUserDefaults?.set(newValue.rawValue, forKey: envKey)
         }
     }
     
     static var refreshToken : String? {
         get {
-            return groupUserDefaults?.string(forKey: refreshTokenUserDefaultsKey)
+            return groupUserDefaults?.string(forKey: refreshTokenKey)
         }
         
         set {
             guard let token = newValue else {
                 return
             }
-            UserDefaults(suiteName: groupBundleIdentifier)?.setValue(token, forKey: refreshTokenUserDefaultsKey)
+            UserDefaults(suiteName: groupBundleIdentifier)?.setValue(token, forKey: refreshTokenKey)
         }
     }
     
     static var authToken : String? {
         get {
-            return groupUserDefaults?.string(forKey: authTokenserDefaultsKey)
+            return groupUserDefaults?.string(forKey: authTokenKey)
         }
         
         set {
             guard let token = newValue else {
                 return
             }
-            UserDefaults(suiteName: groupBundleIdentifier)?.setValue(token, forKey: authTokenserDefaultsKey)
+            UserDefaults(suiteName: groupBundleIdentifier)?.setValue(token, forKey: authTokenKey)
         }
     }
     
-    static var uid : Int? {
+    static var uid : String? {
         get {
-            return groupUserDefaults?.integer(forKey: uidserDefaultsKey)
+            return groupUserDefaults?.string(forKey: uidKey)
         }
         
         set {
             guard let token = newValue else {
                 return
             }
-            UserDefaults(suiteName: groupBundleIdentifier)?.setValue(token, forKey: uidserDefaultsKey)
+            UserDefaults(suiteName: groupBundleIdentifier)?.setValue(token, forKey: uidKey)
         }
     }
     
@@ -100,7 +93,7 @@ public struct DBNetworkKit {
         }
     }
     
-    public static var groupUserDefaults : UserDefaults? {
+    static var groupUserDefaults : UserDefaults? {
         get {
             return UserDefaults(suiteName: groupBundleIdentifier)
         }

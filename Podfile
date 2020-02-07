@@ -7,7 +7,7 @@ source 'https://github.com/CocoaPods/Specs.git'
 target 'DBNetworkApp' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
-  pod 'DBNetworkKit', path: './'
+  pod 'DBNetworkKit'
   pod 'DBLoggingKit'
 
   # Pods for DBNetworkApp

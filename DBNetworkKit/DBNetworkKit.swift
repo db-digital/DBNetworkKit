@@ -8,8 +8,8 @@
 
 import UIKit
 import DBLoggingKit
-
-struct DBNetworkKit {
+public struct DBNetworkKit {
+   
     static public let refreshTokenKey : String = "rt"
     static public let authTokenKey : String = "at"
     static public let envKey : String = "env"
@@ -100,7 +100,7 @@ struct DBNetworkKit {
         }
     }
     
-    static var groupUserDefaults : UserDefaults? {
+    public static var groupUserDefaults : UserDefaults? {
         get {
             return UserDefaults(suiteName: groupBundleIdentifier)
         }

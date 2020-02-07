@@ -14,7 +14,6 @@ public class DBRequestFactory {
         if let at = DBNetworkKit.authToken {
             request.setValue(at, forHTTPHeaderField: "at")
         }
-        
         return request
     }
     
@@ -25,7 +24,7 @@ public class DBRequestFactory {
         request.setValue("521", forHTTPHeaderField: "cid")
         request.setValue("a6oaq3edtz59", forHTTPHeaderField: "x-aut-t")
         request.setValue("hehheh", forHTTPHeaderField: "a-ver-name")
-        request.setValue("1234", forHTTPHeaderField: "a-ver-code")
+        request.setValue("1.0", forHTTPHeaderField: "a-ver-code")
         return request
     }
 }

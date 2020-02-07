@@ -1,6 +1,6 @@
 {
   "name": "DBNetworkKit",
-  "version": "0.0.10",
+  "version": "0.0.15",
   "summary": "A small framework to manage the Network requests.",
   "description": "A small framework to manage the Network requests in the apps.",
   "homepage": "https://github.com/db-digital/DBNetworkKit",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "git@github.com:db-digital/DBNetworkKit.git",
-    "tag": "0.0.10"
+    "tag": "0.0.15"
   },
   "source_files": [
     "DBNetworkKit",

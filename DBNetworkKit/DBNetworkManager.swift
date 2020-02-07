@@ -150,7 +150,6 @@ public class DBNetworkManager {
                          DBNetworkKit.uidKey : String(describing: DBNetworkKit.uid)
             ]
             
-            print("Body: ",body)
             let jsonData = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
             request.httpBody = jsonData
             let dataTask = URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) in

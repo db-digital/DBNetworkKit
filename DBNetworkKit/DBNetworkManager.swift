@@ -41,10 +41,21 @@ public class DBNetworkManager {
     }
     
     public func saveCityListWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
-        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/cities") {
+        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/user/prefs/cities") {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
             urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
+    public func getSavedCityListWithCompletion(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/user/prefs/cities") {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            
             executeURLRequest(urlRequest: urlRequest, completion: completion)
         } else {
             completion?(nil, nil, nil)
@@ -153,7 +164,7 @@ public class DBNetworkManager {
     }
     
     public func refreshAuthToken(completion: ((Error?)->())?) {
-        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/at") {
+        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/user/at") {
             var request = DBRequestFactory.accessTokenRequest(url: url)
             request.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
             let body = [ DBNetworkKit.authTokenKey : DBNetworkKit.authToken,
@@ -194,6 +205,7 @@ public class DBNetworkManager {
         }
         
     }
+  
     public func authenticateWithCompletion(completion: ((HTTPURLResponse?, [AnyHashable : Any]?, Error?)->())?) {
         if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/user/register") {
             var request = DBRequestFactory.accessTokenRequest(url: url)

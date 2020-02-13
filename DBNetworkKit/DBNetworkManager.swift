@@ -14,6 +14,21 @@ public class DBNetworkManager {
     // MARK: - Public Methods
     public static let shared: DBNetworkManager = DBNetworkManager()
     
+    public func executeNonDBURLRequest(url : URL, completion : (([AnyHashable : Any]?, Data?, Error?)->())?) {
+        var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+        urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+        let task = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
+            if let self = self {
+                if let deserializedResponse = self.getResponseFromData(data: data).responseData  {
+                    completion?(deserializedResponse, data, error)
+                } else {
+                    completion?(nil, data, error)
+                }
+            }
+        }
+        task.resume()
+    }
+    
     public func getCityListWithCompletion(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
         if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/cities") {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
@@ -61,13 +76,18 @@ public class DBNetworkManager {
         }
     }
     
-    public func getFeedWithCursorID(cursorID : String, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
-        if let url = URL(string: "https://api.myjson.com/bins/17cw0m") {
-            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
-            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
-            executeURLRequest(urlRequest: urlRequest, completion: completion)
+    public func getFeedWithCursorID(cursorID : String?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
+        if let cursorID = cursorID {
+            if let url = URL(string: "https://api.myjson.com/bins/17cw0m") {
+                DBLogger.shared.logMessage(message: "cursor ID is \(cursorID)")
+                var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+                urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+                executeURLRequest(urlRequest: urlRequest, completion: completion)
+            } else {
+                completion?(nil, nil, nil)
+            }
         } else {
-            completion?(nil, nil, nil)
+            getFeed(completion: completion)
         }
     }
     
@@ -75,7 +95,8 @@ public class DBNetworkManager {
         if let url = URL(string: "https://api.myjson.com/bins/j9v4q") {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
-            executeURLRequest(urlRequest: urlRequest, completion: completion)
+            executeNonDBURLRequest(url: url, completion: completion)
+//            executeURLRequest(urlRequest: urlRequest, completion: completion)
         } else {
             completion?(nil, nil, nil)
         }
@@ -124,13 +145,16 @@ public class DBNetworkManager {
             }
             dataTask.resume()
         } else {
-            authenticateWithCompletion { [weak self] (response, authenticationError) in
+            authenticateWithCompletion { [weak self] (urlResponse, response, authenticationError) in
                 if let self = self {
-                    
-                    if authenticationError != nil  {
+                    if let urlResponse = urlResponse, urlResponse.statusCode != 200 {
+                        completion?(nil, nil, authenticationError)
+                    } else if authenticationError != nil  {
                         completion?(nil, nil, authenticationError)
                     } else {
-                        self.executeURLRequest(urlRequest: urlRequest, completion: completion)
+                        var authenticatedURLRequest = urlRequest
+                        authenticatedURLRequest.reloadAuthenticationHeader()
+                        self.executeURLRequest(urlRequest: authenticatedURLRequest, completion: completion)
                     }
                 } else {
                     completion?(nil, nil, NSError())
@@ -181,13 +205,14 @@ public class DBNetworkManager {
         }
         
     }
-    public func authenticateWithCompletion(completion: (([AnyHashable : Any]?, Error?)->())?) {
+  
+    public func authenticateWithCompletion(completion: ((HTTPURLResponse?, [AnyHashable : Any]?, Error?)->())?) {
         if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/user/register") {
             var request = DBRequestFactory.accessTokenRequest(url: url)
             request.httpMethod = RequestMethod.post.rawValue
             
             let dataTask = URLSession.shared.dataTask(with: request) {
-                data, response, error in
+                data, urlResponse, error in
                 let result = self.getResponseFromData(data: data)
                 if let result = result.responseData  {
                     if let at = result[DBNetworkKit.authTokenKey] as? String {
@@ -203,8 +228,8 @@ public class DBNetworkManager {
                     }
                 }
                 
-                DBLogger.shared.logMessage(message: "Response for authentication is \(response)")
-                completion?(result.responseData, error)
+                DBLogger.shared.logMessage(message: "Response for authentication is \(urlResponse)")
+                completion?(urlResponse as? HTTPURLResponse, result.responseData, error)
             }
             dataTask.resume()
             
@@ -212,8 +237,27 @@ public class DBNetworkManager {
         
     }
     
-    public func startNetworkMonitor() {
-        DBLogger.shared.logMessage(message: "Network monitoring start....")
+    public func sendRequest(urlString: String,
+                            method: DBNetworkManager.RequestMethod,
+                            parameters: [String: Any]?,
+                            completion: @escaping (_ data: Data?, _ error: Error?) -> ()) -> Void {
+        
+        DBLogger.shared.logMessage(message: "Connecting with URL \(urlString) with parameters: \(String(describing: parameters))")
+        guard let url = URL(string: urlString) else { return }
+        var request : URLRequest = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        
+        if let params = parameters {
+//            request.httpBody = printableParams(dictionary: params).data(using: .utf8)
+        }
+        
+        let dataTask = URLSession.shared.dataTask(with: request) {
+            data, response, error in
+            let result = self.getResponseFromData(data: data)
+            DBLogger.shared.logMessage(message: "Response for URL \(urlString) is: \(result)")
+            completion(data, error)
+        }
+        dataTask.resume()
     }
     
     fileprivate func convertToData(_ value: Any) -> Data {
@@ -258,3 +302,12 @@ extension DBNetworkManager {
         case post = "POST"
     }
 }
+
+extension URLRequest {
+    mutating func reloadAuthenticationHeader() {
+        if let at = DBNetworkKit.authToken {
+            self.setValue(at, forHTTPHeaderField: "at")
+        }
+    }
+}
+

@@ -9,6 +9,9 @@
 import UIKit
 
 public class DBRequestFactory {
+    
+    static private let channelIdKey = "ChannelId"
+    
     static func baseURLRequest(url : URL) -> URLRequest {
         var request = accessTokenRequest(url: url)
         if let at = DBNetworkKit.authToken {
@@ -31,7 +34,7 @@ public class DBRequestFactory {
     static var channelId: String {
         get {
             if let plistData = DBNetworkKit.infoPlistValues {
-                return plistData["ChannelId"] as? String ?? "0"
+                return plistData[channelIdKey] as? String ?? "0"
             }
             return "0"
         }

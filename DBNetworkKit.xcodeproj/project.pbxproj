@@ -16,7 +16,6 @@
 		18E61F7923CF0CE0006DD0A9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18E61F7723CF0CE0006DD0A9 /* LaunchScreen.storyboard */; };
 		18E61F7F23CF0EEC006DD0A9 /* DBNetworkKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18E61F5723CEF97F006DD0A9 /* DBNetworkKit.framework */; };
 		18E61F8023CF0EEC006DD0A9 /* DBNetworkKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 18E61F5723CEF97F006DD0A9 /* DBNetworkKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		18E61F8523CF111A006DD0A9 /* NewsListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E61F8423CF111A006DD0A9 /* NewsListController.swift */; };
 		993BEA48CB5E5BAC475E3305 /* Pods_DBNetworkApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4583ACEDD6BCD5947ADDF897 /* Pods_DBNetworkApp.framework */; };
 		9E765DE1439E6E878E1F63AF /* Pods_DBNetworkKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A16EC6F950E7284877F410DF /* Pods_DBNetworkKit.framework */; };
 		D364193723E010B500B6E8BD /* DBNetworkKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364193623E010B500B6E8BD /* DBNetworkKit.swift */; };
@@ -59,7 +58,6 @@
 		18E61F7523CF0CE0006DD0A9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		18E61F7823CF0CE0006DD0A9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		18E61F7A23CF0CE0006DD0A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		18E61F8423CF111A006DD0A9 /* NewsListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsListController.swift; sourceTree = "<group>"; };
 		1FC9DA3553F9968E8AD257BA /* Pods-DBNetworkApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBNetworkApp.debug.xcconfig"; path = "Target Support Files/Pods-DBNetworkApp/Pods-DBNetworkApp.debug.xcconfig"; sourceTree = "<group>"; };
 		4583ACEDD6BCD5947ADDF897 /* Pods_DBNetworkApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DBNetworkApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5BD70A5227B8FF4A181EC7A0 /* Pods-DBNetworkKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBNetworkKit.release.xcconfig"; path = "Target Support Files/Pods-DBNetworkKit/Pods-DBNetworkKit.release.xcconfig"; sourceTree = "<group>"; };
@@ -132,7 +130,6 @@
 				18E61F7523CF0CE0006DD0A9 /* Assets.xcassets */,
 				18E61F7723CF0CE0006DD0A9 /* LaunchScreen.storyboard */,
 				18E61F7A23CF0CE0006DD0A9 /* Info.plist */,
-				18E61F8423CF111A006DD0A9 /* NewsListController.swift */,
 			);
 			path = DBNetworkApp;
 			sourceTree = "<group>";
@@ -348,7 +345,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				18E61F8523CF111A006DD0A9 /* NewsListController.swift in Sources */,
 				18E61F7123CF0CDE006DD0A9 /* ViewController.swift in Sources */,
 				18E61F6D23CF0CDE006DD0A9 /* AppDelegate.swift in Sources */,
 			);

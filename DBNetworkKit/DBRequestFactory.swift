@@ -21,10 +21,19 @@ public class DBRequestFactory {
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("ios", forHTTPHeaderField: "dtyp")
-        request.setValue("521", forHTTPHeaderField: "cid")
+        request.setValue(channelId, forHTTPHeaderField: "cid")
         request.setValue("a6oaq3edtz59", forHTTPHeaderField: "x-aut-t")
         request.setValue("hehheh", forHTTPHeaderField: "a-ver-name")
         request.setValue("1.0", forHTTPHeaderField: "a-ver-code")
         return request
+    }
+    
+    static var channelId: String {
+        get {
+            if let plistData = DBNetworkKit.infoPlistValues {
+                return plistData["ChannelId"] as? String ?? "0"
+            }
+            return "0"
+        }
     }
 }

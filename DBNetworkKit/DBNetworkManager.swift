@@ -13,6 +13,18 @@ public class DBNetworkManager {
     
     // MARK: - Public Methods
     public static let shared: DBNetworkManager = DBNetworkManager()
+    private let baseUrl = "http://prod.bhaskarapi.com/api/1.0/"
+    
+    public func signupUserWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        if let url = URL(string: baseUrl + DBNetworkKeys.signupUser) {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
+            urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
     
     public func executeNonDBURLRequest(url : URL, completion : (([AnyHashable : Any]?, Data?, Error?)->())?) {
         var urlRequest = DBRequestFactory.baseURLRequest(url: url)
@@ -30,7 +42,8 @@ public class DBNetworkManager {
     }
     
     public func getCityListWithCompletion(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
-        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/cities") {
+        
+        if let url = URL(string: baseUrl + DBNetworkKeys.cities) {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
             
@@ -41,7 +54,7 @@ public class DBNetworkManager {
     }
     
     public func saveCityListWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
-        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/user/prefs/cities") {
+        if let url = URL(string: baseUrl + DBNetworkKeys.userCities) {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
             urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
@@ -52,7 +65,7 @@ public class DBNetworkManager {
     }
     
     public func getSavedCityListWithCompletion(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
-        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/user/prefs/cities") {
+        if let url = URL(string: baseUrl + DBNetworkKeys.userCities) {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
             
@@ -63,7 +76,7 @@ public class DBNetworkManager {
     }
     
     public func updateFcmTokenWithCompletion(parameters: [String: Any], completion : ((String, [AnyHashable : Any]?, Data?, Error?)->Void)?) {
-        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/update-fcm-token") {
+        if let url = URL(string: baseUrl + DBNetworkKeys.updateFcmToken) {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
             urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
@@ -164,7 +177,7 @@ public class DBNetworkManager {
     }
     
     public func refreshAuthToken(completion: ((Error?)->())?) {
-        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/user/at") {
+        if let url = URL(string: baseUrl + DBNetworkKeys.refreshAuthToken) {
             var request = DBRequestFactory.accessTokenRequest(url: url)
             request.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
             let body = [ DBNetworkKit.authTokenKey : DBNetworkKit.authToken,
@@ -207,7 +220,8 @@ public class DBNetworkManager {
     }
   
     public func authenticateWithCompletion(completion: ((HTTPURLResponse?, [AnyHashable : Any]?, Error?)->())?) {
-        if let url = URL(string: "http://prod.bhaskarapi.com/api/1.0/user/register") {
+        if let url = URL(string: baseUrl + DBNetworkKeys.registerAuthToken) {
+
             var request = DBRequestFactory.accessTokenRequest(url: url)
             request.httpMethod = RequestMethod.post.rawValue
             

@@ -10,12 +10,11 @@ import UIKit
 
 struct DBNetworkKeys {
     
-    static public let kCities = "cities"
-    static public let kUserCities = "prefs/cities"
-    static public let kUpdateFcmToken = "update-fcm-token"
-    static public let kRefreshAuthToken = "at"
-    static public let kRegisterAuthToken = "register"
-    
-
+    static public let cities = "cities"
+    static public let userCities = "user/prefs/cities"
+    static public let updateFcmToken = "update-fcm-token"
+    static public let refreshAuthToken = "user/at"
+    static public let registerAuthToken = "user/register"
+    static public let signupUser = "user/signup"
 }
 

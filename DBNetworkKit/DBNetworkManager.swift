@@ -15,8 +15,53 @@ public class DBNetworkManager {
     public static let shared: DBNetworkManager = DBNetworkManager()
     private let baseUrl = "http://prod.bhaskarapi.com/api/1.0/"
     
-    public func signupUserWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
-        if let url = URL(string: baseUrl + DBNetworkKeys.signupUser) {
+    public func saveUserAgeWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        if let url = URL(string: "https://api.myjson.com/bins/hfgxs") {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            //urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
+    public func saveUserGenderWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        if let url = URL(string: "https://api.myjson.com/bins/hfgxs") {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            //urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
+    public func saveUsernameWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        if let url = URL(string: "https://api.myjson.com/bins/hfgxs") {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            //urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
+    public func verifyOTPWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        if let url = URL(string: baseUrl + DBNetworkKeys.verifyOTP) {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
+    
+    public func sendOTPWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        if let url = URL(string: baseUrl + DBNetworkKeys.sendOTP) {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
             urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)

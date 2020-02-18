@@ -15,6 +15,7 @@ struct DBNetworkKeys {
     static public let updateFcmToken = "update-fcm-token"
     static public let refreshAuthToken = "user/at"
     static public let registerAuthToken = "user/register"
-    static public let signupUser = "user/signup"
+    static public let sendOTP = "user/signup"
+    static public let verifyOTP = "user/verify-otp"
 }
 

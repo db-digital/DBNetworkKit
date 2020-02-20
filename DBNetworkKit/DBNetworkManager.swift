@@ -150,18 +150,20 @@ public class DBNetworkManager {
     }
     
     public func getArticleWithIdentifier(identifier : Int, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
-        if let url = URL(string: "https://api.myjson.com/bins/j9v4q") {
+//        if let url = URL(string: "https://api.myjson.com/bins/j9v4q") {
+        if let url = URL(string: baseUrl + DBNetworkKeys.story + "/\(identifier)") {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
-            executeNonDBURLRequest(url: url, completion: completion)
-//            executeURLRequest(urlRequest: urlRequest, completion: completion)
+//            executeNonDBURLRequest(url: url, completion: completion)
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
         } else {
             completion?(nil, nil, nil)
         }
     }
     
     public func getFeed(completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
-        if let url = URL(string: "https://api.myjson.com/bins/17cw0m") {
+        if let url = URL(string: baseUrl + DBNetworkKeys.feedHome) {
+//        if let url = URL(string: "https://api.myjson.com/bins/17cw0m") {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
             executeURLRequest(urlRequest: urlRequest, completion: completion)
@@ -346,6 +348,7 @@ public class DBNetworkManager {
             let responseData = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [AnyHashable : Any]
             return (responseData, nil)
         } catch let error {
+            DBLogger.shared.logMessage(message: "Error during parsing data is \(error)")
             return (nil, error)
         }
     }

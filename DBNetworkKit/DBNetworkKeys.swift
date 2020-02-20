@@ -17,5 +17,7 @@ struct DBNetworkKeys {
     static public let registerAuthToken = "user/register"
     static public let sendOTP = "user/signup"
     static public let verifyOTP = "user/verify-otp"
+    static public let feedHome = "feed/home"
+    static public let story = "feed/story"
 }
 

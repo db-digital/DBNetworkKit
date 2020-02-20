@@ -356,6 +356,16 @@ public class DBNetworkManager {
     func timeStamp()-> TimeInterval {
         return Date().timeIntervalSince1970.rounded()
     }
+    
+    public func getCategories(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        if let url = URL(string: baseUrl + DBNetworkKeys.categories) {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
 }
 
 extension DBNetworkManager {

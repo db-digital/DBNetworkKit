@@ -19,5 +19,6 @@ struct DBNetworkKeys {
     static public let verifyOTP = "user/verify-otp"
     static public let feedHome = "feed/home"
     static public let story = "feed/story"
+    static public let categories = "cats"
 }
 

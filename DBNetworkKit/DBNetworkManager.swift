@@ -134,7 +134,7 @@ public class DBNetworkManager {
         }
     }
     
-    public func getFeedWithCursorID(cursorID : String?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
+    public func getFeedWithCursorID(cursorID : String?, categoryId: String?, direction: String?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
         if let cursorID = cursorID {
             if let url = URL(string: "https://api.myjson.com/bins/17cw0m") {
                 DBLogger.shared.logMessage(message: "cursor ID is \(cursorID)")
@@ -145,7 +145,7 @@ public class DBNetworkManager {
                 completion?(nil, nil, nil)
             }
         } else {
-            getFeed(completion: completion)
+            getFeed(cursorID: cursorID, categoryId: categoryId, direction: direction, completion: completion)
         }
     }
     
@@ -161,9 +161,23 @@ public class DBNetworkManager {
         }
     }
     
-    public func getFeed(completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
-        if let url = URL(string: baseUrl + DBNetworkKeys.feedHome) {
-//        if let url = URL(string: "https://api.myjson.com/bins/17cw0m") {
+    public func getFeed(cursorID : String?, categoryId: String?, direction: String?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
+        var urlString = baseUrl
+        if let categoryID = categoryId {
+            urlString += DBNetworkKeys.feedCategory + categoryID
+        } else {
+            urlString += DBNetworkKeys.feedHome
+        }
+        
+        if let cursorID = cursorID {
+            urlString += "?cursor=\(cursorID)"
+        }
+        
+        if let direction = direction {
+            urlString += "?direction=\(direction)"
+        }
+        
+        if let url = URL(string: urlString) {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
             executeURLRequest(urlRequest: urlRequest, completion: completion)

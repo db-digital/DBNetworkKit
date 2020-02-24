@@ -20,5 +20,6 @@ struct DBNetworkKeys {
     static public let feedHome = "feed/home"
     static public let story = "feed/story"
     static public let categories = "cats"
+    static public let feedCategory = "feed/category/"
 }
 

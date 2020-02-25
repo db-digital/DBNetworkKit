@@ -171,7 +171,7 @@ public class DBNetworkManager {
             urlComponents.path.append(contentsOf: DBNetworkKeys.feedHome)
         }
         
-        if let cursorID = cursorID {
+        if let cursorID = cursorID, cursorID.count > 0 {
             urlComponents.queryItems?.append(URLQueryItem(name: "cursor", value: cursorID))
         }
         

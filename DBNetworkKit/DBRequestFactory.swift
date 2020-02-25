@@ -9,8 +9,16 @@
 import UIKit
 
 public class DBRequestFactory {
-    
     static private let channelIdKey = "ChannelId"
+    
+    static func baseURLComponents() -> URLComponents {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = DBNetworkKeys.scheme
+        urlComponents.host = DBNetworkKeys.baseHostName
+        urlComponents.path = DBNetworkKeys.basePath
+        urlComponents.queryItems = []
+        return urlComponents
+    }
     
     static func baseURLRequest(url : URL) -> URLRequest {
         var request = accessTokenRequest(url: url)

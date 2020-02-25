@@ -10,6 +10,11 @@ import UIKit
 import DBLoggingKit
 public struct DBNetworkKit {
    
+    public enum FeedCursorDirection : String {
+        case up = "up"
+        case down = "down"
+    }
+    
     static public let refreshTokenKey : String = "rt"
     static public let authTokenKey : String = "at"
     static public let envKey : String = "env"

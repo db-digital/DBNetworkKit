@@ -13,7 +13,6 @@ public class DBNetworkManager {
     
     // MARK: - Public Methods
     public static let shared: DBNetworkManager = DBNetworkManager()
-    private let baseUrl = "http://prod.bhaskarapi.com/api/1.0/"
     
     public func saveUserAgeWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
         if let url = URL(string: "https://api.myjson.com/bins/hfgxs") {
@@ -49,7 +48,10 @@ public class DBNetworkManager {
     }
     
     public func verifyOTPWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
-        if let url = URL(string: baseUrl + DBNetworkKeys.verifyOTP) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.verifyOTP)
+        
+        if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
             urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
@@ -61,7 +63,10 @@ public class DBNetworkManager {
     
     
     public func sendOTPWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
-        if let url = URL(string: baseUrl + DBNetworkKeys.sendOTP) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.sendOTP)
+        
+        if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
             urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
@@ -87,8 +92,10 @@ public class DBNetworkManager {
     }
     
     public func getCityListWithCompletion(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.cities)
         
-        if let url = URL(string: baseUrl + DBNetworkKeys.cities) {
+        if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
             
@@ -99,7 +106,10 @@ public class DBNetworkManager {
     }
     
     public func saveCityListWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
-        if let url = URL(string: baseUrl + DBNetworkKeys.userCities) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.userCities)
+        
+        if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
             urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
@@ -110,7 +120,10 @@ public class DBNetworkManager {
     }
     
     public func getSavedCityListWithCompletion(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
-        if let url = URL(string: baseUrl + DBNetworkKeys.userCities) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.userCities) 
+        
+        if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
             
@@ -121,7 +134,10 @@ public class DBNetworkManager {
     }
     
     public func updateFcmTokenWithCompletion(parameters: [String: Any], completion : ((String, [AnyHashable : Any]?, Data?, Error?)->Void)?) {
-        if let url = URL(string: baseUrl + DBNetworkKeys.updateFcmToken) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.updateFcmToken)
+        
+        if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
             urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
@@ -134,50 +150,37 @@ public class DBNetworkManager {
         }
     }
     
-    public func getFeedWithCursorID(cursorID : String?, categoryId: String?, direction: String?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
-        if let cursorID = cursorID {
-            if let url = URL(string: "https://api.myjson.com/bins/17cw0m") {
-                DBLogger.shared.logMessage(message: "cursor ID is \(cursorID)")
-                var urlRequest = DBRequestFactory.baseURLRequest(url: url)
-                urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
-                executeURLRequest(urlRequest: urlRequest, completion: completion)
-            } else {
-                completion?(nil, nil, nil)
-            }
-        } else {
-            getFeed(cursorID: cursorID, categoryId: categoryId, direction: direction, completion: completion)
-        }
-    }
-    
     public func getArticleWithIdentifier(identifier : Int, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
-//        if let url = URL(string: "https://api.myjson.com/bins/j9v4q") {
-        if let url = URL(string: baseUrl + DBNetworkKeys.story + "/\(identifier)") {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.story + "\(identifier)")
+        if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
-//            executeNonDBURLRequest(url: url, completion: completion)
             executeURLRequest(urlRequest: urlRequest, completion: completion)
         } else {
             completion?(nil, nil, nil)
         }
     }
     
-    public func getFeed(cursorID : String?, categoryId: String?, direction: String?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
-        var urlString = baseUrl
+    public func getFeed(cursorID : String?, categoryId: Int?, direction: DBNetworkKit.FeedCursorDirection?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        
         if let categoryID = categoryId {
-            urlString += DBNetworkKeys.feedCategory + categoryID
+            urlComponents.path.append(contentsOf: DBNetworkKeys.feedCategory + "\(categoryID)")
         } else {
-            urlString += DBNetworkKeys.feedHome
+            urlComponents.path.append(contentsOf: DBNetworkKeys.feedHome)
         }
         
         if let cursorID = cursorID {
-            urlString += "?cursor=\(cursorID)"
+            urlComponents.queryItems?.append(URLQueryItem(name: "cursor", value: cursorID))
         }
         
         if let direction = direction {
-            urlString += "?direction=\(direction)"
+            urlComponents.queryItems?.append(URLQueryItem(name: "direction", value: direction.rawValue))
         }
         
-        if let url = URL(string: urlString) {
+        
+        if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
             executeURLRequest(urlRequest: urlRequest, completion: completion)
@@ -238,7 +241,9 @@ public class DBNetworkManager {
     }
     
     public func refreshAuthToken(completion: ((Error?)->())?) {
-        if let url = URL(string: baseUrl + DBNetworkKeys.refreshAuthToken) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.refreshAuthToken)
+        if let url = urlComponents.url {
             var request = DBRequestFactory.accessTokenRequest(url: url)
             request.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
             let body = [ DBNetworkKit.authTokenKey : DBNetworkKit.authToken,
@@ -281,8 +286,9 @@ public class DBNetworkManager {
     }
   
     public func authenticateWithCompletion(completion: ((HTTPURLResponse?, [AnyHashable : Any]?, Error?)->())?) {
-        if let url = URL(string: baseUrl + DBNetworkKeys.registerAuthToken) {
-
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.registerAuthToken)
+        if let url = urlComponents.url {
             var request = DBRequestFactory.accessTokenRequest(url: url)
             request.httpMethod = RequestMethod.post.rawValue
             
@@ -321,10 +327,6 @@ public class DBNetworkManager {
         guard let url = URL(string: urlString) else { return }
         var request : URLRequest = URLRequest(url: url)
         request.httpMethod = method.rawValue
-        
-        if let params = parameters {
-//            request.httpBody = printableParams(dictionary: params).data(using: .utf8)
-        }
         
         let dataTask = URLSession.shared.dataTask(with: request) {
             data, response, error in
@@ -372,7 +374,9 @@ public class DBNetworkManager {
     }
     
     public func getCategories(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
-        if let url = URL(string: baseUrl + DBNetworkKeys.categories) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.categories)
+        if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
             executeURLRequest(urlRequest: urlRequest, completion: completion)

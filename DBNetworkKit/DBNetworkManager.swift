@@ -134,37 +134,20 @@ public class DBNetworkManager {
         }
     }
     
-    public func getFeedWithCursorID(cursorID : String?, categoryId: String?, direction: String?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
-        if let cursorID = cursorID {
-            if let url = URL(string: "https://api.myjson.com/bins/17cw0m") {
-                DBLogger.shared.logMessage(message: "cursor ID is \(cursorID)")
-                var urlRequest = DBRequestFactory.baseURLRequest(url: url)
-                urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
-                executeURLRequest(urlRequest: urlRequest, completion: completion)
-            } else {
-                completion?(nil, nil, nil)
-            }
-        } else {
-            getFeed(cursorID: cursorID, categoryId: categoryId, direction: direction, completion: completion)
-        }
-    }
-    
     public func getArticleWithIdentifier(identifier : Int, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
-//        if let url = URL(string: "https://api.myjson.com/bins/j9v4q") {
         if let url = URL(string: baseUrl + DBNetworkKeys.story + "/\(identifier)") {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
-//            executeNonDBURLRequest(url: url, completion: completion)
             executeURLRequest(urlRequest: urlRequest, completion: completion)
         } else {
             completion?(nil, nil, nil)
         }
     }
     
-    public func getFeed(cursorID : String?, categoryId: String?, direction: String?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
+    public func getFeed(cursorID : String?, categoryId: Int?, direction: DBNetworkKit.FeedCursorDirection?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
         var urlString = baseUrl
         if let categoryID = categoryId {
-            urlString += DBNetworkKeys.feedCategory + categoryID
+            urlString += DBNetworkKeys.feedCategory + "\(categoryID)"
         } else {
             urlString += DBNetworkKeys.feedHome
         }
@@ -174,7 +157,7 @@ public class DBNetworkManager {
         }
         
         if let direction = direction {
-            urlString += "?direction=\(direction)"
+            urlString += "?direction=\(direction.rawValue)"
         }
         
         if let url = URL(string: urlString) {

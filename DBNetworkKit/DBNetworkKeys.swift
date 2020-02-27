@@ -13,10 +13,9 @@ struct DBNetworkKeys {
     static public let scheme = "http"
     static public let baseHostName = "prod.bhaskarapi.com"
     static public let basePath = "/api/1.0"
-    
     static public let cities = "/cities"
     static public let userCities = "/user/prefs/cities"
-    static public let updateFcmToken = "/update-fcm-token"
+    static public let updateFcmToken = "/user/update-fcm-token"
     static public let refreshAuthToken = "/user/at"
     static public let registerAuthToken = "/user/register"
     static public let sendOTP = "/user/signup"
@@ -25,5 +24,6 @@ struct DBNetworkKeys {
     static public let story = "/feed/story/"
     static public let categories = "/cats"
     static public let feedCategory = "/feed/category/"
+    static public let searchList = "/cats/all"
 }
 

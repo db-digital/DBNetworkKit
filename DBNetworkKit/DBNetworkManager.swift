@@ -189,6 +189,20 @@ public class DBNetworkManager {
         }
     }
     
+    public func getSearchListWithCompletion(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.searchList)
+        
+        if let url = urlComponents.url {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
     public func executeURLRequest(urlRequest : URLRequest, completion : (([AnyHashable : Any]?, Data?, Error?)->())?) {
         if let authToken = DBNetworkKit.authToken, authToken.count > 0 {
             let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in

@@ -25,5 +25,7 @@ struct DBNetworkKeys {
     static public let categories = "/cats"
     static public let feedCategory = "/feed/category/"
     static public let searchList = "/cats/all"
+    static public let editionList = "/epaper/editions/list"
+    static public let editionPages = "/epaper/edition/"
 }
 

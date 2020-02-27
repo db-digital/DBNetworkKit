@@ -398,6 +398,18 @@ public class DBNetworkManager {
             completion?(nil, nil, nil)
         }
     }
+    
+    public func getEpaperEditionList(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.editionList)
+        if let url = urlComponents.url {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
 }
 
 extension DBNetworkManager {

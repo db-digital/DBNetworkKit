@@ -416,7 +416,7 @@ public class DBNetworkManager {
         let urlPath = isMagazine ? DBNetworkKeys.magazineDetails : DBNetworkKeys.epaperDetails
         urlComponents.path.append(contentsOf: urlPath + edCode)
         if let date = reqDate {
-            urlComponents.path.append(contentsOf: "?dt=\(date)")
+            urlComponents.queryItems?.append(URLQueryItem(name: "dt", value: date))
         }
         if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)

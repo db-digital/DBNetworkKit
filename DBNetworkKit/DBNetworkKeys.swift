@@ -27,5 +27,11 @@ struct DBNetworkKeys {
     static public let searchList = "/cats/all"
     static public let editionList = "/epaper/editions/list"
     static public let editionPages = "/epaper/edition/"
+    static public let magazineList = "/epaper/mag/editions/list"
+    static public let epaperDetails = "/epaper/edition/"
+    static public let magazineDetails = "/epaper/mag/edition/"
+    static public let epaperCities = "/epaper/cities/list"
+    static public let epaperUserCities = "/epaper/user/cities/list"
+    static public let saveEpaperUserCities = "/epaper/user/cities"
 }
 

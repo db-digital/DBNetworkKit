@@ -399,12 +399,53 @@ public class DBNetworkManager {
         }
     }
     
-    public func getEpaperEditionList(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+    public func getEpaperEditionList(isMagazine: Bool, completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
         var urlComponents = DBRequestFactory.baseURLComponents()
-        urlComponents.path.append(contentsOf: DBNetworkKeys.editionList)
+        urlComponents.path.append(contentsOf: isMagazine ? DBNetworkKeys.magazineList : DBNetworkKeys.editionList)
         if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
+    public func getEpaperDetails(isMagazine: Bool, edCode: String, reqDate: String?, completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        let urlPath = isMagazine ? DBNetworkKeys.magazineDetails : DBNetworkKeys.epaperDetails
+        urlComponents.path.append(contentsOf: urlPath + edCode)
+        if let date = reqDate {
+            urlComponents.path.append(contentsOf: "?dt=\(date)")
+        }
+        if let url = urlComponents.url {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
+    public func getEpaperCityList(isUserCity: Bool, completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: isUserCity ? DBNetworkKeys.epaperUserCities : DBNetworkKeys.epaperCities)
+        if let url = urlComponents.url {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            executeURLRequest(urlRequest: urlRequest, completion: completion)
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
+    public func saveEpaperUserCities(params: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.saveEpaperUserCities)
+        if let url = urlComponents.url {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
+            urlRequest.httpBody = printableParams(dictionary: params).data(using: .utf8)
             executeURLRequest(urlRequest: urlRequest, completion: completion)
         } else {
             completion?(nil, nil, nil)

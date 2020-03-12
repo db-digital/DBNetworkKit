@@ -203,12 +203,13 @@ public class DBNetworkManager {
         }
     }
     
-    public func getVideoFeedWithCompletion(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+    public func getVideoFeedWithCompletion(selectedCities: String, completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
         var urlComponents = DBRequestFactory.baseURLComponents()
         urlComponents.path.append(contentsOf: DBNetworkKeys.videofeed)
         
         if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.setValue(selectedCities, forHTTPHeaderField: "cities")
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
             
             executeURLRequest(urlRequest: urlRequest, completion: completion)

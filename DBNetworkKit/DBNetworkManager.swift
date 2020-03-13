@@ -218,6 +218,22 @@ public class DBNetworkManager {
         }
     }
     
+    public func getJsonFromDeeplinkWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+        var urlComponents = DBRequestFactory.baseURLComponents()
+        urlComponents.path.append(contentsOf: DBNetworkKeys.deeplinkJson)
+        
+        if let url = urlComponents.url {
+            var urlRequest = DBRequestFactory.baseURLRequest(url: url)
+            urlRequest.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
+            urlRequest.httpBody = printableParams(dictionary: parameters).data(using: .utf8)
+            executeURLRequest(urlRequest: urlRequest) { (response, data, error) in
+                completion?(response, data, error)
+            }
+        } else {
+            completion?(nil, nil, nil)
+        }
+    }
+    
     public func executeURLRequest(urlRequest : URLRequest, completion : (([AnyHashable : Any]?, Data?, Error?)->())?) {
         if let authToken = DBNetworkKit.authToken, authToken.count > 0 {
             let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
@@ -402,12 +418,13 @@ public class DBNetworkManager {
         return Date().timeIntervalSince1970.rounded()
     }
     
-    public func getCategories(completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
+    public func getCategories(selectedCities: String, completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
         var urlComponents = DBRequestFactory.baseURLComponents()
         urlComponents.path.append(contentsOf: DBNetworkKeys.categories)
         if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
+            urlRequest.setValue(selectedCities, forHTTPHeaderField: "cities")
             executeURLRequest(urlRequest: urlRequest, completion: completion)
         } else {
             completion?(nil, nil, nil)

@@ -34,5 +34,6 @@ struct DBNetworkKeys {
     static public let epaperUserCities = "/epaper/user/cities/list"
     static public let saveEpaperUserCities = "/epaper/user/cities"
     static public let videofeed = "/feed/video/home"
+    static public let deeplinkJson = "/modify-share-url"
 }
 

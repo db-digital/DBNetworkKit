@@ -10,7 +10,7 @@ import UIKit
 
 struct DBNetworkKeys {
     
-    static public let scheme = "http"
+    static public let scheme = "https"
     static public let baseHostName = "prod.bhaskarapi.com"
     static public let basePath = "/api/1.0"
     static public let cities = "/cities"

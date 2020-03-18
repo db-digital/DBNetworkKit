@@ -162,11 +162,11 @@ public class DBNetworkManager {
         }
     }
     
-    public func getFeed(cursorID : String?, categoryId: Int?, direction: DBNetworkKit.FeedCursorDirection?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
+    public func getFeed(cursorID : String?, feedID: Int?, direction: DBNetworkKit.FeedCursorDirection?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
         var urlComponents = DBRequestFactory.baseURLComponents()
         
-        if let categoryID = categoryId {
-            urlComponents.path.append(contentsOf: DBNetworkKeys.feedCategory + "\(categoryID)")
+        if let feedID = feedID {
+            urlComponents.path.append(contentsOf: DBNetworkKeys.feedCategory + "\(feedID)")
         } else {
             urlComponents.path.append(contentsOf: DBNetworkKeys.feedHome)
         }

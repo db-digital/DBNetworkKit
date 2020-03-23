@@ -10,6 +10,8 @@ import UIKit
 
 public class DBRequestFactory {
     static private let channelIdKey = "ChannelId"
+    static private let versionKey = "CFBundleShortVersionString"
+    static private let buildKey = "CFBundleVersion"
     
     static func baseURLComponents() -> URLComponents {
         var urlComponents = URLComponents()
@@ -34,8 +36,8 @@ public class DBRequestFactory {
         request.setValue("ios", forHTTPHeaderField: "dtyp")
         request.setValue(channelId, forHTTPHeaderField: "cid")
         request.setValue("a6oaq3edtz59", forHTTPHeaderField: "x-aut-t")
-        request.setValue("hehheh", forHTTPHeaderField: "a-ver-name")
-        request.setValue("1.0", forHTTPHeaderField: "a-ver-code")
+        request.setValue(version, forHTTPHeaderField: "a-ver-name")
+        request.setValue(build, forHTTPHeaderField: "a-ver-code")
         return request
     }
     
@@ -43,6 +45,24 @@ public class DBRequestFactory {
         get {
             if let plistData = DBNetworkKit.infoPlistValues {
                 return plistData[channelIdKey] as? String ?? "0"
+            }
+            return "0"
+        }
+    }
+    
+    static var version: String {
+        get {
+            if let plistData = DBNetworkKit.infoPlistValues {
+                return plistData[versionKey] as? String ?? "0"
+            }
+            return "0"
+        }
+    }
+    
+    static var build: String {
+        get {
+            if let plistData = DBNetworkKit.infoPlistValues {
+                return plistData[buildKey] as? String ?? "0"
             }
             return "0"
         }

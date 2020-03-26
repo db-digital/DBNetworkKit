@@ -9,9 +9,17 @@
 import UIKit
 
 struct DBNetworkKeys {
-    
+    static var hostName : String {
+        get {
+            if DBNetworkKit.environment == .Staging {
+                return "staging"
+            } else {
+                return "prod"
+            }
+        }
+    }
     static public let scheme = "https"
-    static public let baseHostName = "prod.bhaskarapi.com"
+    static public let baseHostName = "\(hostName).bhaskarapi.com"
     static public let basePath = "/api/1.0"
     static public let cities = "/cities"
     static public let userCities = "/user/prefs/cities"

@@ -9,7 +9,8 @@
 import UIKit
 import DBLoggingKit
 public struct DBNetworkKit {
-   
+    static let defaultAppEnvironment = Env.Prod
+    
     public enum FeedCursorDirection : String {
         case up = "up"
         case down = "down"
@@ -34,22 +35,20 @@ public struct DBNetworkKit {
             } else {
                 return nil
             }
-            
         }
     }
     
-    enum Env : Int {
-        case None
+    enum Env : String {
         case Staging
         case Prod
     }
     
-    static var currentEnv : Env {
+    static var environment : Env {
         get {
-            if let userDefaults = groupUserDefaults {
-                return Env(rawValue:userDefaults.integer(forKey: envserDefaultsKey)) ?? .Prod
+            if let userDefaultsValue = groupUserDefaults?.string(forKey: UserDefaults.Keys.AppEnvironment), let userDefaultsEnv = Env(rawValue: userDefaultsValue) {
+                return userDefaultsEnv
             } else {
-                return .Prod
+                return DBNetworkKit.defaultAppEnvironment
             }
         }
         set {

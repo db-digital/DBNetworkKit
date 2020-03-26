@@ -27,6 +27,7 @@ public struct DBNetworkKit {
     static public let authTokenserDefaultsKey : String = "db.new.at"
     static public let envserDefaultsKey : String = "db.new.env"
     static public let uidserDefaultsKey : String = "db.new.uid"
+    static public let appEnvDefaultsKey : String = "db.new.app.environment"
     
     static var infoPlistValues : [String : Any]? {
         get {
@@ -45,7 +46,7 @@ public struct DBNetworkKit {
     
     static var environment : Env {
         get {
-            if let userDefaultsValue = groupUserDefaults?.string(forKey: UserDefaults.Keys.AppEnvironment), let userDefaultsEnv = Env(rawValue: userDefaultsValue) {
+            if let userDefaultsValue = groupUserDefaults?.string(forKey: appEnvDefaultsKey), let userDefaultsEnv = Env(rawValue: userDefaultsValue) {
                 return userDefaultsEnv
             } else {
                 return DBNetworkKit.defaultAppEnvironment

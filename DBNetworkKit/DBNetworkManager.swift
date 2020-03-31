@@ -162,7 +162,7 @@ public class DBNetworkManager {
         }
     }
     
-    public func getFeed(selectedCities:String, cursorID : String?, feedID: Int?, direction: DBNetworkKit.FeedCursorDirection?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
+    public func getFeed(selectedCities:String?, cursorID : String?, feedID: Int?, direction: DBNetworkKit.FeedCursorDirection?, completion: (([AnyHashable: Any]?, Data?, Error?)->())?) {
         var urlComponents = DBRequestFactory.baseURLComponents()
         
         if let feedID = feedID {

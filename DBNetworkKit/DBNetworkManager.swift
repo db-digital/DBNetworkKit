@@ -183,7 +183,9 @@ public class DBNetworkManager {
         if let url = urlComponents.url {
             var urlRequest = DBRequestFactory.baseURLRequest(url: url)
             urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
-            urlRequest.setValue(selectedCities, forHTTPHeaderField: "cities")
+            if let cities = selectedCities {
+                urlRequest.setValue(cities, forHTTPHeaderField: "cities")
+            }
             executeURLRequest(urlRequest: urlRequest, completion: completion)
         } else {
             completion?(nil, nil, nil)

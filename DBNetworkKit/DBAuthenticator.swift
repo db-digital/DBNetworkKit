@@ -19,17 +19,17 @@ public class DBAuthenticator {
         self.queue.async { [weak self] in
             if let self = self {
                 self.semaphore.wait()
-                DBLogger.shared.logMessage(message: "uid token during authentication is \(String(describing: DBNetworkKit.uid))", level: .info, tag: "Analytics")
+                DBLogger.shared.logMessage(message: "Current Uid token during authentication is \(String(describing: DBNetworkKit.uid))", level: .info, tag: "Analytics")
                 if let uid = DBNetworkKit.uid, uid != 0 {
                     self.semaphore.signal()
-                    completion?(false)
+                    DBLogger.shared.logMessage(message: "UID token already present. Authentication Successful \(String(describing: DBNetworkKit.uid))", level: .info, tag: "Analytics")
+                    completion?(true)
                 } else {
                     var urlComponents = DBRequestFactory.baseURLComponents()
                     urlComponents.path.append(contentsOf: DBNetworkKeys.registerAuthToken)
                     if let url = urlComponents.url {
                         var request = DBRequestFactory.accessTokenRequest(url: url)
                         request.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
-                        var success = false
                         let dataTask = URLSession.shared.dataTask(with: request) { data, urlResponse, error in
                             let result = DBNetworkManager.getResponseFromData(data: data)
                             DBLogger.shared.logMessage(message: "Result for authentication is \(result), response \(String(describing: urlResponse)), error \(String(describing: error))")
@@ -63,8 +63,6 @@ public class DBAuthenticator {
                                     completion?(false)
                                     return
                                 }
-                                
-                                success = true
                                 DBLogger.shared.logMessage(message: "Authentication successfullllllll", level: .info, tag: "Analytics")
                                 self.semaphore.signal()
                                 completion?(true)
@@ -75,7 +73,6 @@ public class DBAuthenticator {
                             }
                         }
                         dataTask.resume()
-                        DBLogger.shared.logMessage(message: "Function returning \(success)", level: .info, tag: "Analytics")
                     } else {
                         DBLogger.shared.logMessage(message: "Unable to get url for authentication", level: .info, tag: "Analytics")
                         self.semaphore.signal()

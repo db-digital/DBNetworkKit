@@ -13,6 +13,7 @@ public class DBNetworkManager {
     
     // MARK: - Public Methods
     public static let shared: DBNetworkManager = DBNetworkManager()
+    public var authCompletion: ((Int) -> ())?
     
     public func saveUserAgeWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
         if let url = URL(string: "https://api.myjson.com/bins/hfgxs") {
@@ -354,10 +355,11 @@ public class DBNetworkManager {
                     
                     if let uid = result[DBNetworkKit.uidKey] as? Int {
                         DBNetworkKit.uid = uid
+                        self.authCompletion?(uid)
                     }
                 }
                 
-                DBLogger.shared.logMessage(message: "Response for authentication is \(urlResponse)")
+                DBLogger.shared.logMessage(message: "Response for authentication is \(String(describing: urlResponse))")
                 completion?(urlResponse as? HTTPURLResponse, result.responseData, error)
             }
             dataTask.resume()

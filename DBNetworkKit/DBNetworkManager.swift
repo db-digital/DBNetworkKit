@@ -13,7 +13,7 @@ public class DBNetworkManager {
     
     // MARK: - Public Methods
     public static let shared: DBNetworkManager = DBNetworkManager()
-    public var authCompletion: ((Int) -> ())?
+    public var authCompletion: ((Int?) -> ())?
     
     public func saveUserAgeWithCompletion(parameters: [String: Any], completion : (([AnyHashable : Any]?, Data?, Error?)->Void)?) {
         if let url = URL(string: "https://api.myjson.com/bins/hfgxs") {
@@ -80,13 +80,11 @@ public class DBNetworkManager {
     public func executeNonDBURLRequest(url : URL, completion : (([AnyHashable : Any]?, Data?, Error?)->())?) {
         var urlRequest = DBRequestFactory.baseURLRequest(url: url)
         urlRequest.httpMethod = DBNetworkManager.RequestMethod.get.rawValue
-        let task = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
-            if let self = self {
-                if let deserializedResponse = self.getResponseFromData(data: data).responseData  {
-                    completion?(deserializedResponse, data, error)
-                } else {
-                    completion?(nil, data, error)
-                }
+        let task = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            if let deserializedResponse = DBNetworkManager.getResponseFromData(data: data).responseData  {
+                completion?(deserializedResponse, data, error)
+            } else {
+                completion?(nil, data, error)
             }
         }
         task.resume()
@@ -243,23 +241,18 @@ public class DBNetworkManager {
             let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
                 if let self = self {
                     if let httpUrlResponse = response as? HTTPURLResponse, httpUrlResponse.statusCode == 401 {
-                        self.refreshAuthToken { (refreshTokenError) -> () in
-                            if (refreshTokenError != nil) {
-                                // re-rerun the request
-                                let dataTaskRetry = URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
-                                    if let deserializedResponse = self.getResponseFromData(data: data).responseData  {
-                                        completion?(deserializedResponse, data ,error)
-                                    } else {
-                                        completion?(nil, nil, error)
-                                    }
-                                }
-                                dataTaskRetry.resume()
+                        DBAuthenticator.shared.refreshAuthToken { (success) in
+                            if (success) {
+                                var refreshedURLRequest = urlRequest
+                                refreshedURLRequest.reloadAuthenticationHeader()
+                                self.executeURLRequest(urlRequest: refreshedURLRequest, completion: completion)
                             } else {
-                                completion?(nil, nil, refreshTokenError)
+                                let error = NSError(domain: "DBNetworkKit", code: 1, userInfo: nil)
+                                completion?(nil, nil, error)
                             }
                         }
                     } else {
-                        if let deserializedResponse = self.getResponseFromData(data: data).responseData  {
+                        if let deserializedResponse = DBNetworkManager.getResponseFromData(data: data).responseData  {
                             completion?(deserializedResponse, data, error)
                         } else {
                             completion?(nil, nil, error)
@@ -271,101 +264,31 @@ public class DBNetworkManager {
             }
             dataTask.resume()
         } else {
-            authenticateWithCompletion { [weak self] (urlResponse, response, authenticationError) in
-                if let self = self {
-                    if let urlResponse = urlResponse, urlResponse.statusCode != 200 {
-                        completion?(nil, nil, authenticationError)
-                    } else if authenticationError != nil  {
-                        completion?(nil, nil, authenticationError)
-                    } else {
-                        var authenticatedURLRequest = urlRequest
-                        authenticatedURLRequest.reloadAuthenticationHeader()
-                        self.executeURLRequest(urlRequest: authenticatedURLRequest, completion: completion)
-                    }
+            authenticateWithCompletion { (success) in
+                if success {
+                    var authenticatedURLRequest = urlRequest
+                    authenticatedURLRequest.reloadAuthenticationHeader()
+                    self.executeURLRequest(urlRequest: authenticatedURLRequest, completion: completion)
                 } else {
-                    completion?(nil, nil, NSError())
+                    completion?(nil, nil, NSError(domain: "dainik bhaskar", code: 1, userInfo: nil))
                 }
             }
         }
-    }
-    
-    public func refreshAuthToken(completion: ((Error?)->())?) {
-        var urlComponents = DBRequestFactory.baseURLComponents()
-        urlComponents.path.append(contentsOf: DBNetworkKeys.refreshAuthToken)
-        if let url = urlComponents.url {
-            var request = DBRequestFactory.accessTokenRequest(url: url)
-            request.httpMethod = DBNetworkManager.RequestMethod.post.rawValue
-            let body = [ DBNetworkKit.authTokenKey : DBNetworkKit.authToken,
-                         DBNetworkKit.refreshTokenKey : DBNetworkKit.refreshToken,
-                         DBNetworkKit.uidKey : String(describing: DBNetworkKit.uid)
-            ]
-            let jsonData = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
-            request.httpBody = jsonData
-            let dataTask = URLSession.shared.dataTask(with: request) { [weak self] (data, response, error) in
-                if let error = error {
-                    completion?(error)
-                } else {
-                    // 403
-                    if let httpUrlResponse = response as? HTTPURLResponse, httpUrlResponse.statusCode == 403 {
-                        // save blocked user value
-                        completion?(NSError(domain: "DBNetworkKit", code: 0, userInfo: nil))
-                    } else {
-                        // save auth token and refresh token
-                        if let self = self, let responseJSON = self.getResponseFromData(data: data).responseData  {
-                            if let at = responseJSON[DBNetworkKit.authTokenKey] as? String,
-                                let rt = responseJSON[DBNetworkKit.refreshTokenKey] as? String {
-                                DBNetworkKit.authToken = at
-                                DBNetworkKit.refreshToken = rt
-                                completion?(nil)
-                            } else {
-                                completion?(NSError(domain: "DBNetworkKit", code: 0, userInfo: nil))
-                            }
-                        } else {
-                            completion?(NSError(domain: "DBNetworkKit", code: 0, userInfo: nil))
-                        }
-                    }
-                }
-            }
-            dataTask.resume()
-        } else {
-            // Add error here later
-            completion?(NSError(domain: "DBNetworkKit", code: 0, userInfo: nil))
-        }
-        
     }
   
-    public func authenticateWithCompletion(completion: ((HTTPURLResponse?, [AnyHashable : Any]?, Error?)->())?) {
-        var urlComponents = DBRequestFactory.baseURLComponents()
-        urlComponents.path.append(contentsOf: DBNetworkKeys.registerAuthToken)
-        if let url = urlComponents.url {
-            var request = DBRequestFactory.accessTokenRequest(url: url)
-            request.httpMethod = RequestMethod.post.rawValue
-            
-            let dataTask = URLSession.shared.dataTask(with: request) {
-                data, urlResponse, error in
-                let result = self.getResponseFromData(data: data)
-                if let result = result.responseData  {
-                    if let at = result[DBNetworkKit.authTokenKey] as? String {
-                        DBNetworkKit.authToken = at
-                    }
-                    
-                    if let rt = result[DBNetworkKit.refreshTokenKey] as? String {
-                        DBNetworkKit.refreshToken = rt
-                    }
-                    
-                    if let uid = result[DBNetworkKit.uidKey] as? Int {
-                        DBNetworkKit.uid = uid
+    public func authenticateWithCompletion(completion: ((Bool)->())?) {
+        DBAuthenticator.shared.authenticate { [weak self] (success) in
+            if success {
+                DBAuthenticator.shared.uid { [weak self] (uid) in
+                    if let self = self {
                         self.authCompletion?(uid)
                     }
+                    completion?(success)
                 }
-                
-                DBLogger.shared.logMessage(message: "Response for authentication is \(String(describing: urlResponse))")
-                completion?(urlResponse as? HTTPURLResponse, result.responseData, error)
+            } else {
+                completion?(success)
             }
-            dataTask.resume()
-            
         }
-        
     }
     
     public func sendRequest(urlString: String,
@@ -380,7 +303,7 @@ public class DBNetworkManager {
         
         let dataTask = URLSession.shared.dataTask(with: request) {
             data, response, error in
-            let result = self.getResponseFromData(data: data)
+            let result = DBNetworkManager.getResponseFromData(data: data)
             DBLogger.shared.logMessage(message: "Response for URL \(urlString) is: \(result)")
             completion(data, error)
         }
@@ -408,7 +331,7 @@ public class DBNetworkManager {
         }
     }
     
-    private func getResponseFromData(data: Data?) -> (responseData: [AnyHashable : Any]?, error: Error?) {
+    class func getResponseFromData(data: Data?) -> (responseData: [AnyHashable : Any]?, error: Error?) {
         guard let data = data else { return (nil, nil) }
         do {
             let responseData = try JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [AnyHashable : Any]

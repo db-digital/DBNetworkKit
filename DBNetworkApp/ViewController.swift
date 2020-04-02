@@ -14,6 +14,9 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        DBAuthenticator.shared.authenticate(completion: nil)
+        DBAuthenticator.shared.refreshAuthToken(completion: nil)
+        DBAuthenticator.shared.authenticate(completion: nil)
         testNetworkRequest()
     }
 
@@ -27,9 +30,9 @@ class ViewController: UIViewController {
 //            print("result: ", result as Any)
 //        }
         
-        DBNetworkManager.shared.getCityListWithCompletion { (response, data, error) in
-            DBLogger.shared.logMessage(message: "city list is \(response)")
-        }
+//        DBNetworkManager.shared.getCityListWithCompletion { (response, data, error) in
+//            DBLogger.shared.logMessage(message: "city list is \(response)")
+//        }
     }
 }
 

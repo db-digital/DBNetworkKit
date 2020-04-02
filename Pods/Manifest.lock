@@ -1,10 +1,10 @@
 PODS:
-  - CocoaLumberjack/Core (3.6.0)
-  - CocoaLumberjack/Swift (3.6.0):
+  - CocoaLumberjack/Core (3.6.1)
+  - CocoaLumberjack/Swift (3.6.1):
     - CocoaLumberjack/Core
-  - DBLoggingKit (0.0.7):
+  - DBLoggingKit (0.0.8):
     - CocoaLumberjack/Swift
-  - DBNetworkKit (0.0.15):
+  - DBNetworkKit (0.0.35):
     - DBLoggingKit
 
 DEPENDENCIES:
@@ -22,9 +22,9 @@ EXTERNAL SOURCES:
     :path: "./"
 
 SPEC CHECKSUMS:
-  CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
-  DBLoggingKit: 975a2b1a390718edb51a331077b41608a3015a6c
-  DBNetworkKit: e506779319d57b496b849c7ca0c71d35cb32fd32
+  CocoaLumberjack: b17ae15142558d08bbacf69775fa10c4abbebcc9
+  DBLoggingKit: 49b9122298b2fb886e2643bbd1b4fcafb0b7aa68
+  DBNetworkKit: 5b3387b32960595b69cef9241bf8916a3fa406d1
 
 PODFILE CHECKSUM: e800f10c02c882d0bb30ed5ff2f9db4d5b5ba2ba
 

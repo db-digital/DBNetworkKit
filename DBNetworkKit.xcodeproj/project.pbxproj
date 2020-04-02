@@ -21,6 +21,7 @@
 		B2880A7323EC366300CD514D /* DBNetworkKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2880A7223EC366300CD514D /* DBNetworkKeys.swift */; };
 		D364193723E010B500B6E8BD /* DBNetworkKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364193623E010B500B6E8BD /* DBNetworkKit.swift */; };
 		D364193923E04C4800B6E8BD /* DBRequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = D364193823E04C4800B6E8BD /* DBRequestFactory.swift */; };
+		D3B542122435ED38006DD037 /* DBAuthenticator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B542112435ED38006DD037 /* DBAuthenticator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		B97A1E3605A84C943B513FC9 /* Pods-DBNetworkApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBNetworkApp.release.xcconfig"; path = "Target Support Files/Pods-DBNetworkApp/Pods-DBNetworkApp.release.xcconfig"; sourceTree = "<group>"; };
 		D364193623E010B500B6E8BD /* DBNetworkKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBNetworkKit.swift; sourceTree = "<group>"; };
 		D364193823E04C4800B6E8BD /* DBRequestFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBRequestFactory.swift; sourceTree = "<group>"; };
+		D3B542112435ED38006DD037 /* DBAuthenticator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBAuthenticator.swift; sourceTree = "<group>"; };
 		D56A5A21D74FFF8D9ECA2EAC /* Pods-DBNetworkKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DBNetworkKit.debug.xcconfig"; path = "Target Support Files/Pods-DBNetworkKit/Pods-DBNetworkKit.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,6 +119,7 @@
 				18E61F5A23CEF97F006DD0A9 /* DBNetworkKit.h */,
 				18E61F5B23CEF97F006DD0A9 /* Info.plist */,
 				D364193623E010B500B6E8BD /* DBNetworkKit.swift */,
+				D3B542112435ED38006DD037 /* DBAuthenticator.swift */,
 				18E61F6223CEF9E0006DD0A9 /* DBNetworkManager.swift */,
 				18E61F6423CEFEE3006DD0A9 /* NetworkReachability.swift */,
 				D364193823E04C4800B6E8BD /* DBRequestFactory.swift */,
@@ -338,6 +341,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2880A7323EC366300CD514D /* DBNetworkKeys.swift in Sources */,
+				D3B542122435ED38006DD037 /* DBAuthenticator.swift in Sources */,
 				18E61F6323CEF9E0006DD0A9 /* DBNetworkManager.swift in Sources */,
 				D364193923E04C4800B6E8BD /* DBRequestFactory.swift in Sources */,
 				D364193723E010B500B6E8BD /* DBNetworkKit.swift in Sources */,

@@ -53,20 +53,25 @@ public class DBLogger: NSObject {
 //        }
     }
     
-    public func logMessage(message : String, level : DBLogLevel = .info) {
+    public func logMessage(message : String, level : DBLogLevel = .info, tag : String = "") {
         #if DEBUG
+        var taggedMessage = message
+        if tag.count > 0 {
+            taggedMessage = "\(tag) : \(taggedMessage)"
+        }
+        
         switch level {
         case .info:
-            DDLogInfo(message)
+            DDLogInfo(taggedMessage)
             break
         case .error:
-            DDLogError(message)
+            DDLogError(taggedMessage)
             break
         case .verbose:
-            DDLogVerbose(message)
+            DDLogVerbose(taggedMessage)
             break
         case .warn:
-            DDLogWarn(message)
+            DDLogWarn(taggedMessage)
             break
         }
         #endif

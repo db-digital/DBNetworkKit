@@ -11,7 +11,7 @@ import UIKit
 struct DBNetworkKeys {
     static var hostName : String {
         get {
-            if DBNetworkKit.environment == .Staging {
+            if DBNetworkKit.environment == .staging {
                 return "staging"
             } else {
                 return "prod"

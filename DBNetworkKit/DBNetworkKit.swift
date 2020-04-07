@@ -9,7 +9,7 @@
 import UIKit
 import DBLoggingKit
 public struct DBNetworkKit {
-    static let defaultAppEnvironment = Env.Prod
+    static let defaultAppEnvironment = Env.prod
     
     public enum FeedCursorDirection : String {
         case up = "up"
@@ -40,8 +40,8 @@ public struct DBNetworkKit {
     }
     
     enum Env : String {
-        case Staging
-        case Prod
+        case staging
+        case prod
     }
     
     static var environment : Env {

@@ -19,10 +19,10 @@ public class DBAuthenticator {
         self.queue.async { [weak self] in
             if let self = self {
                 self.semaphore.wait()
-                DBLogger.shared.logMessage(message: "Current Uid token during authentication is \(String(describing: DBNetworkKit.uid))", level: .info, tag: "Analytics")
+                DBLogger.shared.logMessage(message: "Current Uid token during authentication is \(String(describing: DBNetworkKit.uid))", level: .info, tag: "DBNetworkKit")
                 if let uid = DBNetworkKit.uid, uid != 0 {
                     self.semaphore.signal()
-                    DBLogger.shared.logMessage(message: "UID token already present. Authentication Successful \(String(describing: DBNetworkKit.uid))", level: .info, tag: "Analytics")
+                    DBLogger.shared.logMessage(message: "UID token already present. Authentication Successful \(String(describing: DBNetworkKit.uid))", level: .info, tag: "DBNetworkKit")
                     completion?(true)
                 } else {
                     var urlComponents = DBRequestFactory.baseURLComponents()
@@ -36,9 +36,9 @@ public class DBAuthenticator {
                             if let result = result.responseData  {
                                 if let at = result[DBNetworkKit.authTokenKey] as? String {
                                     DBNetworkKit.authToken = at
-                                    DBLogger.shared.logMessage(message: "Auth response Auth token \(at)", level: .info, tag: "Analytics")
+                                    DBLogger.shared.logMessage(message: "Auth response Auth token \(at)", level: .info, tag: "DBNetworkKit")
                                 } else {
-                                    DBLogger.shared.logMessage(message: "corrupted auth token received", level: .info, tag: "Analytics")
+                                    DBLogger.shared.logMessage(message: "corrupted auth token received", level: .info, tag: "DBNetworkKit")
                                     self.semaphore.signal()
                                     completion?(false)
                                     return
@@ -46,9 +46,9 @@ public class DBAuthenticator {
                                 
                                 if let rt = result[DBNetworkKit.refreshTokenKey] as? String {
                                     DBNetworkKit.refreshToken = rt
-                                    DBLogger.shared.logMessage(message: "Auth response Refresh token \(rt)", level: .info, tag: "Analytics")
+                                    DBLogger.shared.logMessage(message: "Auth response Refresh token \(rt)", level: .info, tag: "DBNetworkKit")
                                 } else {
-                                    DBLogger.shared.logMessage(message: "corrupted refresh token received", level: .info, tag: "Analytics")
+                                    DBLogger.shared.logMessage(message: "corrupted refresh token received", level: .info, tag: "DBNetworkKit")
                                     self.semaphore.signal()
                                     completion?(false)
                                     return
@@ -56,25 +56,25 @@ public class DBAuthenticator {
                                 
                                 if let uid = result[DBNetworkKit.uidKey] as? Int {
                                     DBNetworkKit.uid = uid
-                                    DBLogger.shared.logMessage(message: "Auth response UID \(uid)", level: .info, tag: "Analytics")
+                                    DBLogger.shared.logMessage(message: "Auth response UID \(uid)", level: .info, tag: "DBNetworkKit")
                                 } else {
-                                    DBLogger.shared.logMessage(message: "corrupted uid token received", level: .info, tag: "Analytics")
+                                    DBLogger.shared.logMessage(message: "corrupted uid token received", level: .info, tag: "DBNetworkKit")
                                     self.semaphore.signal()
                                     completion?(false)
                                     return
                                 }
-                                DBLogger.shared.logMessage(message: "Authentication successfullllllll", level: .info, tag: "Analytics")
+                                DBLogger.shared.logMessage(message: "Authentication successfullllllll", level: .info, tag: "DBNetworkKit")
                                 self.semaphore.signal()
                                 completion?(true)
                             } else {
-                                DBLogger.shared.logMessage(message: "corrupted data in authentication response", level: .info, tag: "Analytics")
+                                DBLogger.shared.logMessage(message: "corrupted data in authentication response", level: .info, tag: "DBNetworkKit")
                                 self.semaphore.signal()
                                 completion?(false)
                             }
                         }
                         dataTask.resume()
                     } else {
-                        DBLogger.shared.logMessage(message: "Unable to get url for authentication", level: .info, tag: "Analytics")
+                        DBLogger.shared.logMessage(message: "Unable to get url for authentication", level: .info, tag: "DBNetworkKit")
                         self.semaphore.signal()
                         completion?(false)
                     }
@@ -90,11 +90,11 @@ public class DBAuthenticator {
             if let self = self {
                 self.semaphore.wait()
                 if self.beingRefreshed {
-                    DBLogger.shared.logMessage(message: "Being refreshed. Returning", level: .info, tag: "Analytics.Refresh")
+                    DBLogger.shared.logMessage(message: "Being refreshed. Returning", level: .info, tag: "DBNetworkKit.Refresh")
                     self.semaphore.signal()
                     completion?(true)
                 } else {
-                    DBLogger.shared.logMessage(message: "Going to refresh", level: .info, tag: "Analytics.Refresh")
+                    DBLogger.shared.logMessage(message: "Going to refresh", level: .info, tag: "DBNetworkKit.Refresh")
                     self.beingRefreshed = true
                     var urlComponents = DBRequestFactory.baseURLComponents()
                     urlComponents.path.append(contentsOf: DBNetworkKeys.refreshAuthToken)
@@ -105,7 +105,7 @@ public class DBAuthenticator {
                                      DBNetworkKit.refreshTokenKey : DBNetworkKit.refreshToken,
                                      DBNetworkKit.uidKey : DBNetworkKit.uid
                             ]
-                        DBLogger.shared.logMessage(message: "Refresh token request \(body)", level: .info, tag: "Analytics")
+                        DBLogger.shared.logMessage(message: "Refresh token request \(body)", level: .info, tag: "DBNetworkKit")
                         let jsonData = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
                         request.httpBody = jsonData
                         
@@ -113,7 +113,7 @@ public class DBAuthenticator {
                             if let self = self {
                                 if let _ = error {
                                     self.beingRefreshed = false
-                                    DBLogger.shared.logMessage(message: "Unsuccessful refresh 1", level: .info, tag: "Analytics.Refresh")
+                                    DBLogger.shared.logMessage(message: "Unsuccessful refresh 1", level: .info, tag: "DBNetworkKit.Refresh")
                                     self.semaphore.signal()
                                     completion?(false)
                                 } else {
@@ -122,7 +122,7 @@ public class DBAuthenticator {
                                         // save blocked user value
                                         let _ = NSError(domain: "DBNetworkKit", code: 0, userInfo: nil)
                                         self.beingRefreshed = false
-                                        DBLogger.shared.logMessage(message: "Unsuccessful refresh 2", level: .info, tag: "Analytics.Refresh")
+                                        DBLogger.shared.logMessage(message: "Unsuccessful refresh 2", level: .info, tag: "DBNetworkKit.Refresh")
                                         self.semaphore.signal()
                                         completion?(false)
                                     } else {
@@ -133,23 +133,23 @@ public class DBAuthenticator {
                                                 DBNetworkKit.authToken = at
                                                 DBNetworkKit.refreshToken = rt
                                                 
-                                                DBLogger.shared.logMessage(message: "Refresh call : Auth token Response : \(at)", level: .info, tag: "Analytics")
-                                                DBLogger.shared.logMessage(message: "Refresh call : Refresh token Response : \(rt)", level: .info, tag: "Analytics")
+                                                DBLogger.shared.logMessage(message: "Refresh call : Auth token Response : \(at)", level: .info, tag: "DBNetworkKit")
+                                                DBLogger.shared.logMessage(message: "Refresh call : Refresh token Response : \(rt)", level: .info, tag: "DBNetworkKit")
                                                 self.beingRefreshed = false
-                                                DBLogger.shared.logMessage(message: "Successful refresh", level: .info, tag: "Analytics.Refresh")
+                                                DBLogger.shared.logMessage(message: "Successful refresh", level: .info, tag: "DBNetworkKit.Refresh")
                                                 self.semaphore.signal()
                                                 completion?(true)
                                             } else {
                                                 let _ = NSError(domain: "DBNetworkKit", code: 0, userInfo: nil)
                                                 self.beingRefreshed = false
-                                                DBLogger.shared.logMessage(message: "Unsuccessful refresh 3 \(responseJSON)", level: .info, tag: "Analytics.Refresh")
+                                                DBLogger.shared.logMessage(message: "Unsuccessful refresh 3 \(responseJSON)", level: .info, tag: "DBNetworkKit.Refresh")
                                                 self.semaphore.signal()
                                                 completion?(false)
                                             }
                                         } else {
                                             let _ = NSError(domain: "DBNetworkKit", code: 0, userInfo: nil)
                                             self.beingRefreshed = false
-                                            DBLogger.shared.logMessage(message: "Unsuccessful refresh 4", level: .info, tag: "Analytics.Refresh")
+                                            DBLogger.shared.logMessage(message: "Unsuccessful refresh 4", level: .info, tag: "DBNetworkKit.Refresh")
                                             self.semaphore.signal()
                                             completion?(false)
                                         }
@@ -157,7 +157,7 @@ public class DBAuthenticator {
                                 }
                             } else {
                                 self?.beingRefreshed = false
-                                DBLogger.shared.logMessage(message: "Unsuccessful refresh 5", level: .info, tag: "Analytics.Refresh")
+                                DBLogger.shared.logMessage(message: "Unsuccessful refresh 5", level: .info, tag: "DBNetworkKit.Refresh")
                                 self?.semaphore.signal()
                                 completion?(false)
                             }
@@ -167,14 +167,14 @@ public class DBAuthenticator {
                         // Add error here later
                         let _ = NSError(domain: "DBNetworkKit", code: 0, userInfo: nil)
                         self.beingRefreshed = false
-                        DBLogger.shared.logMessage(message: "Unsuccessful refresh 6", level: .info, tag: "Analytics.Refresh")
+                        DBLogger.shared.logMessage(message: "Unsuccessful refresh 6", level: .info, tag: "DBNetworkKit.Refresh")
                         self.semaphore.signal()
                         completion?(false)
                     }
                 }
             } else {
                 // self not present
-                DBLogger.shared.logMessage(message: "Unsuccessful refresh 7", level: .info, tag: "Analytics.Refresh")
+                DBLogger.shared.logMessage(message: "Unsuccessful refresh 7", level: .info, tag: "DBNetworkKit.Refresh")
                 completion?(false)
             }
         }
@@ -195,6 +195,15 @@ public class DBAuthenticator {
     public func uid(completion: ((Int?)->())?) {
         queue.async {
             completion?(DBNetworkKit.uid)
+        }
+    }
+    
+    public func resetLoginDetails(completion: (()->())?) {
+        queue.async {
+            DBNetworkKit.authToken = ""
+            DBNetworkKit.refreshToken = ""
+            DBNetworkKit.uid = 0
+            completion?()
         }
     }
 }

@@ -241,7 +241,9 @@ public class DBNetworkManager {
             let dataTask = URLSession.shared.dataTask(with: urlRequest) { [weak self] (data, response, error) in
                 if let self = self {
                     if let httpUrlResponse = response as? HTTPURLResponse, httpUrlResponse.statusCode == 401 {
+                        DBLogger.shared.logMessage(message: "Going to make a refresh token call", level: .info, tag: "DBNetworkKit")
                         DBAuthenticator.shared.refreshAuthToken { (success) in
+                            DBLogger.shared.logMessage(message: "Refresh token call is success \(success)", level: .info, tag: "DBNetworkKit")
                             if (success) {
                                 var refreshedURLRequest = urlRequest
                                 refreshedURLRequest.reloadAuthenticationHeader()
@@ -264,6 +266,7 @@ public class DBNetworkManager {
             }
             dataTask.resume()
         } else {
+            DBLogger.shared.logMessage(message: "Going to authenticate for \(urlRequest)", level: .info, tag: "DBNetworkKit")
             authenticateWithCompletion { (success) in
                 if success {
                     var authenticatedURLRequest = urlRequest
@@ -278,8 +281,10 @@ public class DBNetworkManager {
   
     public func authenticateWithCompletion(completion: ((Bool)->())?) {
         DBAuthenticator.shared.authenticate { [weak self] (success) in
+            DBLogger.shared.logMessage(message: "Authentication is successful \(success)", level: .info, tag: "DBNetworkKit")
             if success {
                 DBAuthenticator.shared.uid { [weak self] (uid) in
+                    DBLogger.shared.logMessage(message: "UID from authentication is \(uid)", level: .info, tag: "DBNetworkKit")
                     if let self = self {
                         self.authCompletion?(uid)
                     }
